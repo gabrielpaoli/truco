@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Truco</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  </head>
+
+
+  <body>
+    <div class="container container-general-game">
+      <div class="row">
+        <div class="container-game col-md-8">
+          <div class="row">
+            <div class="container-player1-cards col-md-12">
+              <div id="player1">Player 1</div>
+              <div class="card" id="card1"></div>
+              <div class="card" id="card2"></div>
+              <div class="card" id="card3"></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="board col-md-12">
+              <div class="container-board-cards">
+                <div class="cardBoard" id="playedCard1"></div>
+                <div class="cardBoard" id="playedCard2"></div>
+                <div class="cardBoard" id="playedCard3"></div>
+              </div>
+
+              <div class="container-board-cards">
+                <div class="cardBoard" id="playedCard4"></div>
+                <div class="cardBoard" id="playedCard5"></div>
+                <div class="cardBoard" id="playedCard6"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="container-player2-cards col-md-12">
+              <div id="player2">Player 2</div>
+              <div class="card" id="card4"></div>
+              <div class="card" id="card5"></div>
+              <div class="card" id="card6"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container-general col-md-4">
+          <div class="col-md-12">
+            <div class="btn btn-primary" id="init">Repartir</div>
+            <div id="envido">Envido</div>
+            <div id="truco">Truco</div>
+            <div id="flor">Flor</div>
+            <div id="envido2">Envido</div>
+            <div id="real-envido">Real envido</div>
+            <div id="real-envido2">Real envido</div>
+            <div id="falta-envido">Falta envido</div>
+          </div>
+         </div>
+      </div>
+    </div>
+  </body>
+
+
+  <script>
+    $(function () {
+      var socket = io();
+
+      $('#init').click(function(){
+        socket.emit('init');
+      });
+
+      socket.on('init', function(handCards){
+        setHandCards(handCards);
+      });
+
+      function setHandCards(handCards){
+        $(".card").empty();
+        console.log(handCards);
+        $( "#card1" ).append( handCards[0].cards[0].cardText);
+        $( "#card2" ).append( handCards[0].cards[1].cardText);
+        $( "#card3" ).append( handCards[0].cards[2].cardText);
+        $( "#card4" ).append( handCards[1].cards[0].cardText);
+        $( "#card5" ).append( handCards[1].cards[1].cardText);
+        $( "#card6" ).append( handCards[1].cards[2].cardText);
+      }
+
+      function setHandHandIcon(handCards){
+        $(".handIcon").empty();
+      }
+
+    });
+  </script>
+    
+
+</html>
