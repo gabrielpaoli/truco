@@ -16,36 +16,36 @@
       <div class="row">
         <div class="container-game col-md-8">
           <div class="row">
+            <div id="player1">Player 1</div>
             <div class="container-player1-cards col-md-12">
-              <div id="player1">Player 1</div>
-              <div class="card" id="card1"></div>
-              <div class="card" id="card2"></div>
-              <div class="card" id="card3"></div>
+              <div class="card" data-player="player-1" id="card1"></div>
+              <div class="card" data-player="player-1" id="card2"></div>
+              <div class="card" data-player="player-1" id="card3"></div>
             </div>
           </div>
 
           <div class="row">
             <div class="board col-md-12">
-              <div class="container-board-cards">
-                <div class="cardBoard" id="playedCard1"></div>
-                <div class="cardBoard" id="playedCard2"></div>
-                <div class="cardBoard" id="playedCard3"></div>
+              <div class="container-board-cards container-board-cards-1">
+                <div class="cardBoard" data-player="player-1" id="playedCard1"></div>
+                <div class="cardBoard" data-player="player-1" id="playedCard2"></div>
+                <div class="cardBoard" data-player="player-1" id="playedCard3"></div>
               </div>
 
-              <div class="container-board-cards">
-                <div class="cardBoard" id="playedCard4"></div>
-                <div class="cardBoard" id="playedCard5"></div>
-                <div class="cardBoard" id="playedCard6"></div>
+              <div class="container-board-cards container-board-cards-2">
+                <div class="cardBoard" data-player="player-2" id="playedCard4"></div>
+                <div class="cardBoard" data-player="player-2" id="playedCard5"></div>
+                <div class="cardBoard" data-player="player-2" id="playedCard6"></div>
               </div>
             </div>
           </div>
 
           <div class="row">
+            <div id="player2">Player 2</div>
             <div class="container-player2-cards col-md-12">
-              <div id="player2">Player 2</div>
-              <div class="card" id="card4"></div>
-              <div class="card" id="card5"></div>
-              <div class="card" id="card6"></div>
+              <div class="card" data-player="player-2" id="card4"></div>
+              <div class="card" data-player="player-2" id="card5"></div>
+              <div class="card" data-player="player-2" id="card6"></div>
             </div>
           </div>
         </div>
@@ -70,24 +70,64 @@
   <script>
     $(function () {
       var socket = io();
+      var counter = 0;
 
+      //On click repartir
       $('#init').click(function(){
         socket.emit('init');
       });
-
       socket.on('init', function(handCards){
         setHandCards(handCards);
       });
 
+      //On click card
+      $('.card').click(function(){
+        var selectedCard = $(this);
+        var id = selectedCard.context.id;
+        var player = getPlayer(selectedCard);
+        getEmptyCardBoardAndSetCardPlayer(selectedCard, player);
+        socket.emit('card', $(this));
+      });
+      socket.on('card', function(handCards){
+        //console.log(handCards);
+      });
+
+      function getPlayer(selectedCard){
+        if(selectedCard.context.dataset.player === 'player-1'){
+          player = 1;
+        }else{
+          player = 2;
+        }
+        return player;
+      }
+
+      //Get empty spaces in boards and set card player
+      function getEmptyCardBoardAndSetCardPlayer(selectedCard, player){
+        $( ".container-board-cards-" + player + " .cardBoard" ).each(function( index, value ) {
+          if ($(this).find(".card").length > 0){ 
+          }else{
+            var boardCard = $(this);
+            $(selectedCard).appendTo("#" + boardCard.context.id);
+            return false;
+          }
+        });
+      }
+
+      //Set Hand Cards
       function setHandCards(handCards){
         $(".card").empty();
-        console.log(handCards);
-        $( "#card1" ).append( handCards[0].cards[0].cardText);
-        $( "#card2" ).append( handCards[0].cards[1].cardText);
-        $( "#card3" ).append( handCards[0].cards[2].cardText);
-        $( "#card4" ).append( handCards[1].cards[0].cardText);
-        $( "#card5" ).append( handCards[1].cards[1].cardText);
-        $( "#card6" ).append( handCards[1].cards[2].cardText);
+        
+        $( ".container-player1-cards .card" ).each(function( index, value ) {
+          $(this).append( handCards[0].cards[index].cardText);
+          $(this).attr('data-number', handCards[0].cards[index].number);
+          $(this).attr('data-suit', handCards[0].cards[index].suit);
+        });
+
+        $( ".container-player2-cards .card" ).each(function( index, value ) {
+          $(this).append( handCards[1].cards[index].cardText);
+          $(this).attr('data-number', handCards[1].cards[index].number);
+          $(this).attr('data-suit', handCards[1].cards[index].suit);
+        });
       }
 
       function setHandHandIcon(handCards){

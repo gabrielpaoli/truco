@@ -22,12 +22,20 @@ var hand = 1;
 var points = 0;
 
 io.on('connection', function(socket){
-
   socket.on('init', function(msg){
+    var game = new Game(hand);
+    
     hand = whoIsHand(hand);
-    const game = new Game(hand);
     io.emit('init', game.createCardsPerPlayer());
+
+    socket.on('card', function(msg){
+      console.log(msg);
+      io.emit('card', msg);
+    });
+
   });
+
+
 
 });
 

@@ -10,6 +10,12 @@ class Game{
     this.playerNames = ['Gabriel', 'Fulano'];
     this.qtyPlayers = 2;
     this.qtyCardsPerPlayer = 3;
+    
+    var handCards = this.createHandCards();
+    var playersCards = _.chunk(handCards, this.qtyCardsPerPlayer);
+    var extra = this.getEnvido(playersCards);
+    this.player1 = new Player(this.playerNames[0], playersCards[0], extra[0]);
+    this.player2 = new Player(this.playerNames[1], playersCards[1], extra[1]);
   }
 
   qtyOfCardsInTable(){
@@ -37,12 +43,7 @@ class Game{
   }
 
   createCardsPerPlayer(){
-    var handCards = this.createHandCards();
-    var playersCards = _.chunk(handCards, this.qtyCardsPerPlayer);
-    var extra = this.getEnvido(playersCards);
-    var player1 = new Player(this.playerNames[0], playersCards[0], extra[0]);
-    var player2 = new Player(this.playerNames[1], playersCards[1], extra[1]);
-    var playersCardsF = [player1, player2];
+    var playersCardsF = [this.player1, this.player2];
     return playersCardsF;
   }
 

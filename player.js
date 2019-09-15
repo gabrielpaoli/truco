@@ -15,21 +15,27 @@ class Player{
   cantarEnvido(){
 
   }
+
   cantarEnvidoEnvido(){
 
   }
+
   cantarRealEnvido(){
 
   }
+
   cantarRealEnvidoRealEnvido(){
 
   }
+
   cantarTruco(){
 
   }
+
   cantarQuieroReTruco(){
 
   }
+  
   cantarQuieroValeCuatro(){
 
   }
